@@ -1,6 +1,7 @@
 padSequence =[[],[],[]]
 positionStrip=[];
 bpm=90
+play=true;
 function initiateAudio(){
     lowLag.init() 
     lowLag.load('sounds/kick.wav');
@@ -13,10 +14,10 @@ function initiateAudio(){
     }
 }
 window.onload = function() {
-        createPads(6.25,50);
-        createPositionStrip(6.25,50);
+        createPads(6.25,30);
+        createPositionStrip(6.25,30);
         initiateAudio();
-        playSequence(0);
+        runSequence(0);
 };
 
 function formatPadHTML (x,y,width,height,column,row){
@@ -28,6 +29,7 @@ function formatPadHTML (x,y,width,height,column,row){
     pad.style.height = height+"%";
     pad.x=column;
     pad.y=row;
+    pad.id="asdf";
     return pad
 }
 function togglePad(pad){
@@ -63,7 +65,8 @@ function stepPositionStrip(pos){
         positionStrip[(pos+15)%16].className = "pad off "
 }
 
-function playSequence(pos){
+function runSequence(pos){
+        if(!play) return;
         stepPositionStrip(pos);
         for(var i=0;i<3;i++){
                 if(padSequence[i][pos].className=="pad on"){
@@ -71,6 +74,6 @@ function playSequence(pos){
                 }
         }
         setTimeout(function(){
-                playSequence((pos+1)%16);
+                runSequence((pos+1)%16);
         },15000/bpm);
 }

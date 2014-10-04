@@ -1,5 +1,6 @@
 .pad{
     position:absolute;
+    border: 2px solid;
 }
 *{
     margin:0px;
@@ -16,3 +17,4 @@
 .pos{
     background-color:red;
 }
+
