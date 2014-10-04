@@ -1,7 +1,9 @@
 padSequence =[[],[],[]]
 positionStrip=[];
+bpmStrip = [];
+powers = [1,2,4,8,16,32,64,128];
 bpm=90
-play=true;
+running=true;
 function initiateAudio(){
     lowLag.init() 
     lowLag.load('sounds/kick.wav');
@@ -13,12 +15,65 @@ function initiateAudio(){
             2:"sounds/kick.wav",
     }
 }
+function createBpmStrip(width,tapeHeight){
+    for(var count=0; count<16;count++){
+        var x = (count%16);
+        var y = Math.floor((count/16));
+        var pad = formatPadHTML(x*width+10,(50+(1.5*tapeHeight/3)),width,tapeHeight/6,x,y);
+        document.body.appendChild(pad);
+        bpmStrip.push(pad);
+    }
+    updateBpm(bpm);
+}
+
+function updateBpm(newbpm){
+   bpm=newbpm;
+   var i=7;
+   var binary=newbpm
+   while(binary>=0 && i>-1){
+        console.log(binary);
+        if(powers[i]<=binary){
+                binary= binary - powers[i]
+                bpmStrip[i].className = "pad on";
+        }
+        else{
+                bpmStrip[i].className = "pad off";
+        }
+        i--;
+   }
+}
+function toggleRunning(){
+   if(running==false){
+        running=true;
+        runSequence(0);
+        document.getElementById("pausebutton").className="pad play";
+   }
+   else{
+        $('.pos').addClass("off")
+        $('.pos').removeClass('pos');
+        running = false;
+        document.getElementById("pausebutton").className="pad pause";
+   }
+}
 window.onload = function() {
-        createPads(6.25,30);
-        createPositionStrip(6.25,30);
+        createPads(5,30);
+        createPositionStrip(5,30);
+        createBpmStrip(5,30);
         initiateAudio();
         runSequence(0);
 };
+function preparePrint(){
+        $("#bpmSlider").hide();
+        $("#pausebutton").click();
+        $("#pausebutton").hide();
+        $("#printbutton").hide();
+        
+        window.print();
+        $("#bpmSlider").show();
+        $("#pausebutton").show();
+        $("#printbutton").show();
+
+}
 
 function formatPadHTML (x,y,width,height,column,row){
     var pad = document.createElement('div');
@@ -29,7 +84,6 @@ function formatPadHTML (x,y,width,height,column,row){
     pad.style.height = height+"%";
     pad.x=column;
     pad.y=row;
-    pad.id="asdf";
     return pad
 }
 function togglePad(pad){
@@ -43,7 +97,7 @@ function createPositionStrip(width,tapeHeight){
     for(var count=0; count<16;count++){
         var x = (count%16);
         var y = Math.floor((count/16));
-        var pad = formatPadHTML(x*width,(50-(2*tapeHeight/3)),width,tapeHeight/6,x,y);
+        var pad = formatPadHTML(x*width+10,(50-(2*tapeHeight/3)),width,tapeHeight/6,x,y);
         document.body.appendChild(pad);
         positionStrip.push(pad);
     }
@@ -52,7 +106,7 @@ function createPads(width,tapeHeight){
     for(var count=0; count<48;count++){
         var x = (count%16);
         var y = Math.floor((count/16));
-        var pad = formatPadHTML(x*width,(100-(tapeHeight/2)) + y * (tapeHeight/3) -50,width,tapeHeight/3,x,y);
+        var pad = formatPadHTML(x*width+10,(100-(tapeHeight/2)) + y * (tapeHeight/3) -50,width,tapeHeight/3,x,y);
         pad.onclick=function() {
             togglePad(this);
         }
@@ -66,14 +120,15 @@ function stepPositionStrip(pos){
 }
 
 function runSequence(pos){
-        if(!play) return;
-        stepPositionStrip(pos);
-        for(var i=0;i<3;i++){
-                if(padSequence[i][pos].className=="pad on"){
-                       lowLag.play(rowAudio[i]);
-                }
+        if(running){ 
+            stepPositionStrip(pos);
+            for(var i=0;i<3;i++){
+                    if(padSequence[i][pos].className=="pad on"){
+                           lowLag.play(rowAudio[i]);
+                    }
+            }
+            setTimeout(function(){
+                    runSequence((pos+1)%16);
+            },15000/bpm);
         }
-        setTimeout(function(){
-                runSequence((pos+1)%16);
-        },15000/bpm);
 }
