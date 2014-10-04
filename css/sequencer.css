@@ -1,0 +1,18 @@
+.pad{
+    position:absolute;
+}
+*{
+    margin:0px;
+}
+.on {
+    background-color:black
+}
+.off{
+    background-color: white;
+}
+#tape{
+    height:50%;
+}
+.pos{
+    background-color:red;
+}
