@@ -62,9 +62,17 @@ window.onload = function() {
         initiateAudio();
         runSequence(0);
 };
+window.onblur = function(){
+        if(! $("#pausebutton").hasClass("pause")){
+                $("#pausebutton").click();
+        }
+
+}
 function preparePrint(){
         $("#bpmSlider").hide();
-        $("#pausebutton").click();
+        if(! $("#pausebutton").hasClass("pause")){
+                $("#pausebutton").click();
+        }
         $("#pausebutton").hide();
         $("#printbutton").hide();
         
