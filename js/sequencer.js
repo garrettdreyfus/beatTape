@@ -75,8 +75,13 @@ function preparePrint(){
         }
         $("#pausebutton").hide();
         $("#printbutton").hide();
-        
+        positionStrip.map(function(pad){
+                $(pad).hide()
+                });
         window.print();
+        positionStrip.map(function(pad){
+                $(pad).show()
+                });
         $("#bpmSlider").show();
         $("#pausebutton").show();
         $("#printbutton").show();

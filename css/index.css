@@ -1,0 +1,22 @@
+*{
+    font-family: Helvetica;
+    text-align:center;
+}
+#title{
+    font-size:20em;
+    padding-top:5%;
+    padding-bottom:5%;
+    text-align:center;
+}
+#create{
+    font-size:7.5em;
+    text-align:center;
+}
+#read{
+    font-size:7.5em;
+    text-align:center;
+}
+#or{
+    font-size:5em;
+    text-align:center;
+}
