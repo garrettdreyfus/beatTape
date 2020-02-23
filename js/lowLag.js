@@ -1,5 +1,7 @@
 if (!window.console) console = {log: function() {}};
 
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
 var lowLag = new function(){
 	this.someVariable = undefined;
 	this.showNeedInit = function(){ lowLag.msg("lowLag: you must call lowLag.init() first!"); }
@@ -40,7 +42,7 @@ var lowLag = new function(){
 
 		}
 
-		var format = "sm2";
+		var format = "audioTag";
 		if(force != undefined) format = force;
 		else {
 			if(typeof(webkitAudioContext) != "undefined") format = 'webkitAudio';
